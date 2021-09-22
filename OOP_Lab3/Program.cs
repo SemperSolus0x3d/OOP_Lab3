@@ -16,6 +16,9 @@ namespace OOP_Lab3
             {
                 string expression = Console.ReadLine();
 
+                if (string.IsNullOrWhiteSpace(expression))
+                    continue;
+
                 result = calc.ParseAndEvaluate(
                     expression, out needMoreInput
                 );
