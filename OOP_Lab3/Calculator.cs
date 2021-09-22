@@ -60,9 +60,6 @@ namespace OOP_Lab3
                 if (needMoreInput)
                     return 0;
 
-                // Стоило бы это делать внутри
-                // switch'а, но я не хотел
-                // копировать эту строчку
                 state = State.Initial;
 
                 switch (operation)
