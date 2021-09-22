@@ -20,9 +20,6 @@ namespace OOP_Lab3
             {
                 string expression = Console.ReadLine();
 
-                if (string.IsNullOrWhiteSpace(expression))
-                    continue;
-
                 try
                 {
                     result = calc.ParseAndEvaluate(
