@@ -32,6 +32,11 @@ namespace OOP_Lab3
                         lexem += ch;
                     else if (operations.Contains(ch))
                     {
+                        if (state >= State.OperationParsed)
+                            throw new Exception(
+                                "В строке встречено несколько знаков операции"
+                            );
+
                         if (state == State.Initial)
                             leftOperand = decimal.Parse(lexem);
 
@@ -88,7 +93,7 @@ namespace OOP_Lab3
 
         private enum State
         {
-            Initial,
+            Initial = 0,
             LeftOperandParsed,
             OperationParsed,
             RightOperandParsed
