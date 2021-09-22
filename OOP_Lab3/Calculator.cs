@@ -44,7 +44,7 @@ namespace OOP_Lab3
                     }
                 }
 
-                if (state == State.Initial)
+                if (state == State.Initial && lexem != "")
                 {
                     leftOperand = decimal.Parse(lexem);
                     state = State.LeftOperandParsed;
