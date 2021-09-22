@@ -10,58 +10,80 @@ namespace OOP_Lab3
         // Распарсить выражение и вычислить результат
         public decimal ParseAndEvaluate(string expression, out bool needMoreInput)
         {
-            expression = expression.Replace(" ", "");
-            expression = expression.Replace("=", "");
-            expression = expression.Replace(".", ",");
+            // Сохранить состояние калькулятора
+            // на случай неверных входных данных
+            State initialState = state;
+            decimal initialLeftOperand = leftOperand;
+            char initialOperation = operation;
+            decimal initialRightOperand = rightOperand;
 
-            char[] operations = new char[] { '+', '-', '*' };
-
-            string lexem = "";
-
-            foreach (char ch in expression)
+            try
             {
-                if (char.IsDigit(ch) || ch == ',')
-                    lexem += ch;
-                else if (operations.Contains(ch))
+                expression = expression.Replace(" ", "");
+                expression = expression.Replace("=", "");
+                expression = expression.Replace(".", ",");
+
+                char[] operations = new char[] { '+', '-', '*' };
+
+                string lexem = "";
+
+                foreach (char ch in expression)
                 {
-                    if (state == State.Initial)
-                        leftOperand = decimal.Parse(lexem);
+                    if (char.IsDigit(ch) || ch == ',')
+                        lexem += ch;
+                    else if (operations.Contains(ch))
+                    {
+                        if (state == State.Initial)
+                            leftOperand = decimal.Parse(lexem);
 
-                    operation = ch;
+                        operation = ch;
 
-                    lexem = "";
-                    state = State.OperationParsed;
+                        lexem = "";
+                        state = State.OperationParsed;
+                    }
+                }
+
+                if (state == State.Initial)
+                {
+                    leftOperand = decimal.Parse(lexem);
+                    state = State.LeftOperandParsed;
+                }
+                else if (state == State.OperationParsed &&
+                         lexem != "")
+                {
+                    rightOperand = decimal.Parse(lexem);
+                    state = State.RightOperandParsed;
+                }
+
+                needMoreInput = state != State.RightOperandParsed;
+
+                if (needMoreInput)
+                    return 0;
+
+                // Стоило бы это делать внутри
+                // switch'а, но я не хотел
+                // копировать эту строчку
+                state = State.Initial;
+
+                switch (operation)
+                {
+                    case '+': return Add(leftOperand, rightOperand);
+                    case '-': return Substract(leftOperand, rightOperand);
+                    case '*': return Multiply(leftOperand, rightOperand);
+                    default: throw new Exception("Something went wrong...");
                 }
             }
-
-            if (state == State.Initial)
+            catch
             {
-                leftOperand = decimal.Parse(lexem);
-                state = State.LeftOperandParsed;
-            }
-            else if (state == State.OperationParsed &&
-                     lexem != "")
-            {
-                rightOperand = decimal.Parse(lexem);
-                state = State.RightOperandParsed;
-            }
+                // Восстановить состояние калькулятора,
+                // которое было до вызова этого метода
+                state = initialState;
+                leftOperand = initialLeftOperand;
+                operation = initialOperation;
+                rightOperand = initialRightOperand;
 
-            needMoreInput = state != State.RightOperandParsed;
-
-            if (needMoreInput)
-                return 0;
-
-            // Стоило бы это делать внутри
-            // switch'а, но я не хотел
-            // копировать эту строчку
-            state = State.Initial;
-
-            switch (operation)
-            {
-                case '+': return Add(leftOperand, rightOperand);
-                case '-': return Substract(leftOperand, rightOperand);
-                case '*': return Multiply(leftOperand, rightOperand);
-                default: throw new Exception("Something went wrong...");
+                // Пробросить исключение наверх
+                throw;
             }
         }
 
