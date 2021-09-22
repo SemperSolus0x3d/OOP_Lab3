@@ -19,9 +19,10 @@ namespace OOP_Lab3
 
             try
             {
-                expression = expression.Replace(" ", "");
-                expression = expression.Replace("=", "");
-                expression = expression.Replace(".", ",");
+                expression = expression
+                    .Replace(" ", "")
+                    .Replace("=", "")
+                    .Replace(".", ",");
 
                 char[] operations = new char[] { '+', '-', '*' };
 
