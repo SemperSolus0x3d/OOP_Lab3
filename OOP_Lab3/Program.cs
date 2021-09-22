@@ -44,6 +44,14 @@ namespace OOP_Lab3
             }
         }
 
+        static void Pause()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Нажмите ENTER чтобы продолжить...");
+            Console.WriteLine();
+            Console.ReadLine();
+        }
+
         static void PrintGuide()
         {
             Console.WriteLine("Инструкция:");
