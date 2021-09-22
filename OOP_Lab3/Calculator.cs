@@ -61,11 +61,8 @@ namespace OOP_Lab3
                 case '+': return Add(leftOperand, rightOperand);
                 case '-': return Substract(leftOperand, rightOperand);
                 case '*': return Multiply(leftOperand, rightOperand);
+                default: throw new Exception("Something went wrong...");
             }
-
-            // Эта строчка вообще никогда
-            // не должна исполняться
-            throw new Exception();
         }
 
 
