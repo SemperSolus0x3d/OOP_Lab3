@@ -80,6 +80,8 @@ namespace OOP_Lab3
                 operation = initialOperation;
                 rightOperand = initialRightOperand;
 
+                needMoreInput = true;
+
                 // Пробросить исключение наверх
                 throw;
             }
