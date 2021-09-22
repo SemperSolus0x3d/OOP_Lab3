@@ -6,26 +6,42 @@ namespace OOP_Lab3
     {
         static void Main(string[] args)
         {
-            PrintGuide();
-
-            Calculator calc = new Calculator();
-            bool needMoreInput = true;
-            decimal result = 0;
-
-            while (needMoreInput)
+            try
             {
-                string expression = Console.ReadLine();
+                PrintGuide();
 
-                if (string.IsNullOrWhiteSpace(expression))
-                    continue;
+                Calculator calc = new Calculator();
+                bool needMoreInput = true;
+                decimal result = 0;
 
-                result = calc.ParseAndEvaluate(
-                    expression, out needMoreInput
-                );
+                while (needMoreInput)
+                {
+                    string expression = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(expression))
+                        continue;
+
+                    result = calc.ParseAndEvaluate(
+                        expression, out needMoreInput
+                    );
+                }
+
+                Console.WriteLine($"Ответ: {result}");
+                Console.ReadLine();
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    "Скопируйте приведенный ниже текст " +
+                    "и отправьте разработчику программы " +
+                    "вместе выражением, которое вы вводили"
+                );
 
-            Console.WriteLine($"Ответ: {result}");
-            Console.ReadLine();
+                Console.WriteLine();
+                Console.WriteLine(ex);
+
+                Console.ReadLine();
+            }
         }
 
         static void PrintGuide()
