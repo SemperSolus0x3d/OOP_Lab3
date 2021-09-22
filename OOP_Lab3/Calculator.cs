@@ -8,7 +8,7 @@ namespace OOP_Lab3
     public class Calculator
     {
         // Распарсить выражение и вычислить результат
-        public double ParseAndEvaluate(string expression, out bool needMoreInput)
+        public decimal ParseAndEvaluate(string expression, out bool needMoreInput)
         {
             expression = expression.Replace(" ", "");
             expression = expression.Replace("=", "");
@@ -25,7 +25,7 @@ namespace OOP_Lab3
                 else if (operations.Contains(ch))
                 {
                     if (state == State.Initial)
-                        leftOperand = double.Parse(lexem);
+                        leftOperand = decimal.Parse(lexem);
 
                     operation = ch;
 
@@ -36,13 +36,13 @@ namespace OOP_Lab3
 
             if (state == State.Initial)
             {
-                leftOperand = double.Parse(lexem);
+                leftOperand = decimal.Parse(lexem);
                 state = State.LeftOperandParsed;
             }
             else if (state == State.OperationParsed &&
                      lexem != "")
             {
-                rightOperand = double.Parse(lexem);
+                rightOperand = decimal.Parse(lexem);
                 state = State.RightOperandParsed;
             }
 
@@ -79,24 +79,24 @@ namespace OOP_Lab3
 
         private State state = State.Initial;
 
-        private double leftOperand = 0;
+        private decimal leftOperand = 0;
         private char operation = '\0';
-        private double rightOperand = 0;
+        private decimal rightOperand = 0;
 
         // Сложение
-        private double Add(double a, double b)
+        private decimal Add(decimal a, decimal b)
         {
             return a + b;
         }
 
         // Вычитание
-        private double Substract(double a, double b)
+        private decimal Substract(decimal a, decimal b)
         {
             return a - b;
         }
 
         // Умножение
-        private double Multiply(double a, double b)
+        private decimal Multiply(decimal a, decimal b)
         {
             return a * b;
         }
