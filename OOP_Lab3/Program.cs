@@ -27,7 +27,7 @@ namespace OOP_Lab3
                 }
 
                 Console.WriteLine($"Ответ: {result}");
-                Console.ReadLine();
+                Pause();
             }
             catch (Exception ex)
             {
@@ -40,7 +40,7 @@ namespace OOP_Lab3
                 Console.WriteLine();
                 Console.WriteLine(ex);
 
-                Console.ReadLine();
+                Pause();
             }
         }
 
