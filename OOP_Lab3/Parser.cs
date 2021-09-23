@@ -67,7 +67,7 @@ namespace OOP_Lab3
             }
             catch
             {
-                // Восстановить состояние калькулятора,
+                // Восстановить состояние парсера,
                 // которое было до вызова этого метода
                 state = initialState;
                 leftOperand = initialLeftOperand;
