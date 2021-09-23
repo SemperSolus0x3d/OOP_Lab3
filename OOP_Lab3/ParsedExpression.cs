@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OOP_Lab3
+﻿namespace OOP_Lab3
 {
     public enum Operation
     {
