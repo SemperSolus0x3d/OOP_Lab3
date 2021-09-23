@@ -20,7 +20,7 @@ namespace OOP_Lab3
                 expression = expression
                     .Replace(" ", "")
                     .Replace("=", "")
-                    .Replace(".", ",");
+                    .Replace(',', '.');
 
                 char[] operations = new char[] { '+', '-', '*' };
 
@@ -28,7 +28,7 @@ namespace OOP_Lab3
 
                 foreach (char ch in expression)
                 {
-                    if (char.IsDigit(ch) || ch == ',')
+                    if (char.IsDigit(ch) || ch == '.')
                         lexem += ch;
                     else if (operations.Contains(ch))
                     {
@@ -38,7 +38,7 @@ namespace OOP_Lab3
                             );
 
                         if (state == State.Initial)
-                            leftOperand = decimal.Parse(lexem);
+                            leftOperand = ParseDecimal(lexem);
 
                         operation = ch;
 
@@ -49,13 +49,13 @@ namespace OOP_Lab3
 
                 if (state == State.Initial && lexem != "")
                 {
-                    leftOperand = decimal.Parse(lexem);
+                    leftOperand = ParseDecimal(lexem);
                     state = State.LeftOperandParsed;
                 }
                 else if (state == State.OperationParsed &&
                          lexem != "")
                 {
-                    rightOperand = decimal.Parse(lexem);
+                    rightOperand = ParseDecimal(lexem);
                     state = State.RightOperandParsed;
                 }
 
@@ -104,6 +104,18 @@ namespace OOP_Lab3
         private decimal leftOperand = 0;
         private char operation = '\0';
         private decimal rightOperand = 0;
+
+        // Этот метод нужен для того, чтобы всегда парсить
+        // decimal'ы с десятичной точкой, а не запятой,
+        // независимо от языка системы и других параметров
+        private static decimal ParseDecimal(string s)
+        {
+            return decimal.Parse(
+                s,
+                System.Globalization.NumberStyles.Number,
+                System.Globalization.CultureInfo.InvariantCulture
+            );
+        }
 
         // Сложение
         private decimal Add(decimal a, decimal b)
