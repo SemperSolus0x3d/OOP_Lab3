@@ -7,7 +7,7 @@ namespace OOP_Lab3
     {
         // Возвращает true, если парсер готов
         // выдать распарсенное выражение
-        public bool ProcessInput(string expression)
+        public bool ProcessInput(string input)
         {
             if (state == State.RightOperandParsed)
                 throw new Exception("Парсер больше не может принимать данные");
@@ -21,7 +21,7 @@ namespace OOP_Lab3
 
             try
             {
-                expression = expression
+                input = input
                     .Replace(" ", "")
                     .Replace("=", "")
                     .Replace(',', '.');
@@ -30,7 +30,7 @@ namespace OOP_Lab3
 
                 string lexem = "";
 
-                foreach (char ch in expression)
+                foreach (char ch in input)
                 {
                     if (char.IsDigit(ch) || ch == '.')
                         lexem += ch;
