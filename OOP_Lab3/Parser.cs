@@ -104,6 +104,8 @@ namespace OOP_Lab3
                     throw new Exception("Неизвестная операция");
             }
 
+            state = State.Initial;
+
             return new ParsedExpression(leftOperand, operation, rightOperand);
         }
 
