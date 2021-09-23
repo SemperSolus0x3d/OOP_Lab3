@@ -13,23 +13,49 @@ namespace OOP_Lab3
             PrintGuide();
 
             Calculator calc = new Calculator();
+            Parser parser = new Parser();
+
             bool needMoreInput = true;
-            decimal result = 0;
 
             while (needMoreInput)
             {
-                string expression = Console.ReadLine();
+                string input = Console.ReadLine();
 
                 try
                 {
-                    result = calc.ParseAndEvaluate(
-                        expression, out needMoreInput
-                    );
+                    needMoreInput = !parser.ProcessInput(input);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Ошибка: {ex.Message}");
                 }
+            }
+
+            ParsedExpression parsedExpression = parser.GetResult();
+            decimal result = 0m;
+
+            switch (parsedExpression.Operation)
+            {
+                case Operation.Addition:
+                    result = calc.Add(
+                        parsedExpression.LeftOperand,
+                        parsedExpression.RightOperand
+                    );
+                    break;
+
+                case Operation.Substraction:
+                    result = calc.Substract(
+                        parsedExpression.LeftOperand,
+                        parsedExpression.RightOperand
+                    );
+                    break;
+
+                case Operation.Multiplication:
+                    result = calc.Multiply(
+                        parsedExpression.LeftOperand,
+                        parsedExpression.RightOperand
+                    );
+                    break;
             }
 
             Console.WriteLine($"Ответ: {result}");
