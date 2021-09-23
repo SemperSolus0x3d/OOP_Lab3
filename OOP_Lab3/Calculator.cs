@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace OOP_Lab3
+﻿namespace OOP_Lab3
 {
     public class Calculator
     {
