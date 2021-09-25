@@ -123,6 +123,11 @@ namespace OOP_Lab3
                     break;
 
                 case TokenType.OperationSign:
+                    if (state < State.LeftOperandParsed)
+                        throw new Exception(
+                            "Пропущен левый операнд"
+                        );
+
                     if (state >= State.OperationParsed)
                         throw new Exception(
                             "В строке встречено несколько знаков операции"
