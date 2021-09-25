@@ -1,4 +1,6 @@
-﻿namespace OOP_Lab3
+﻿using System;
+
+namespace OOP_Lab3
 {
     public class Calculator
     {
@@ -23,33 +25,29 @@
         // Вычислить распарсенное выражение
         public decimal EvaluateExpression(ParsedExpression expression)
         {
-            decimal result = 0m;
-
             switch (expression.Operation)
             {
                 case Operation.Addition:
-                    result = Add(
+                    return Add(
                         expression.LeftOperand,
                         expression.RightOperand
                     );
-                    break;
 
                 case Operation.Substraction:
-                    result = Substract(
+                    return Substract(
                         expression.LeftOperand,
                         expression.RightOperand
                     );
-                    break;
 
                 case Operation.Multiplication:
-                    result = Multiply(
+                    return Multiply(
                         expression.LeftOperand,
                         expression.RightOperand
                     );
-                    break;
-            }
 
-            return result;
+                default:
+                    throw new Exception("Неизвестная операция");
+            }
         }
     }
 }
