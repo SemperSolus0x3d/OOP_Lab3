@@ -19,5 +19,37 @@
         {
             return a * b;
         }
+
+        // Вычислить распарсенное выражение
+        public decimal EvaluateExpression(ParsedExpression expression)
+        {
+            decimal result = 0m;
+
+            switch (expression.Operation)
+            {
+                case Operation.Addition:
+                    result = Add(
+                        expression.LeftOperand,
+                        expression.RightOperand
+                    );
+                    break;
+
+                case Operation.Substraction:
+                    result = Substract(
+                        expression.LeftOperand,
+                        expression.RightOperand
+                    );
+                    break;
+
+                case Operation.Multiplication:
+                    result = Multiply(
+                        expression.LeftOperand,
+                        expression.RightOperand
+                    );
+                    break;
+            }
+
+            return result;
+        }
     }
 }

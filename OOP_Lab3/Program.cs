@@ -32,31 +32,7 @@ namespace OOP_Lab3
             }
 
             ParsedExpression parsedExpression = parser.GetResult();
-            decimal result = 0m;
-
-            switch (parsedExpression.Operation)
-            {
-                case Operation.Addition:
-                    result = calc.Add(
-                        parsedExpression.LeftOperand,
-                        parsedExpression.RightOperand
-                    );
-                    break;
-
-                case Operation.Substraction:
-                    result = calc.Substract(
-                        parsedExpression.LeftOperand,
-                        parsedExpression.RightOperand
-                    );
-                    break;
-
-                case Operation.Multiplication:
-                    result = calc.Multiply(
-                        parsedExpression.LeftOperand,
-                        parsedExpression.RightOperand
-                    );
-                    break;
-            }
+            decimal result = calc.EvaluateExpression(parsedExpression);
 
             Console.WriteLine($"Ответ: {result}");
             Pause();
