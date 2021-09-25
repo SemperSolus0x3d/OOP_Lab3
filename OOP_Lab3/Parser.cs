@@ -21,10 +21,7 @@ namespace OOP_Lab3
 
             try
             {
-                input = input
-                    .Replace(" ", "")
-                    .Replace("=", "")
-                    .Replace(',', '.');
+                input = NormalizeInput(input);
 
                 char[] operations = new char[] { '+', '-', '*' };
 
@@ -133,6 +130,14 @@ namespace OOP_Lab3
                 System.Globalization.NumberStyles.Number,
                 System.Globalization.CultureInfo.InvariantCulture
             );
+        }
+
+        private string NormalizeInput(string input)
+        {
+            return input
+                .Replace(" ", "")
+                .Replace("=", "")
+                .Replace(',', '.');
         }
     }
 }
