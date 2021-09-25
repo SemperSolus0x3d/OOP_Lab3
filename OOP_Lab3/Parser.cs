@@ -16,6 +16,8 @@ namespace OOP_Lab3
         private State state = State.Initial;
         private ParsedExpression parsedExpression = new ParsedExpression();
 
+        private char[] operationSigns = new char[] { '+', '-', '*' };
+
         // Возвращает true, если парсер готов
         // выдать распарсенное выражение
         public bool ProcessInput(string input)
@@ -81,8 +83,6 @@ namespace OOP_Lab3
 
         private Token GetNextToken(string input, ref int position)
         {
-            char[] operations = new char[] { '+', '-', '*' };
-
             string lexem = "";
             for (; position < input.Length; position++)
             {
@@ -90,7 +90,7 @@ namespace OOP_Lab3
 
                 if (char.IsDigit(ch) || ch == '.')
                     lexem += ch;
-                else if (operations.Contains(ch))
+                else if (operationSigns.Contains(ch))
                 {
                     if (lexem != "")
                         return new Token(lexem, TokenType.Number);
