@@ -12,28 +12,7 @@ namespace OOP_Lab3
 
             PrintGuide();
 
-            Calculator calc = new Calculator();
-            Parser parser = new Parser();
-
-            bool needMoreInput = true;
-
-            while (needMoreInput)
-            {
-                string input = Console.ReadLine();
-
-                try
-                {
-                    needMoreInput = !parser.ProcessInput(input);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ошибка: {ex.Message}");
-                }
-            }
-
-            ParsedExpression parsedExpression = parser.GetResult();
-            decimal result = calc.EvaluateExpression(parsedExpression);
-
+            decimal result = ParseAndEvaluateInput(new Parser());
             Console.WriteLine($"Ответ: {result}");
             Pause();
         }
@@ -82,6 +61,22 @@ namespace OOP_Lab3
             Console.WriteLine("84");
 
             Console.WriteLine();
+        }
+
+        static decimal ParseAndEvaluateInput(Parser parser)
+        {
+            try
+            {
+                if (parser.ProcessInput(Console.ReadLine()))
+                    return new Calculator().EvaluateExpression(parser.GetResult());
+                else
+                    return ParseAndEvaluateInput(parser);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+                return ParseAndEvaluateInput(parser);
+            }
         }
     }
 }
