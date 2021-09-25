@@ -102,7 +102,7 @@ namespace OOP_Lab3
                 }
             }
 
-            return lexem == "" ? null : new Token(lexem, TokenType.Number); ;
+            return lexem == "" ? null : new Token(lexem, TokenType.Number);
         }
 
         private void ParseToken(Token token)
