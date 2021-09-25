@@ -15,49 +15,20 @@ namespace OOP_Lab3
             // Сохранить состояние парсера
             // на случай неверных входных данных
             State initialState = state;
-            decimal initialLeftOperand = leftOperand;
-            char initialOperation = operationSign;
-            decimal initialRightOperand = rightOperand;
+            decimal initialLeftOperand = parsedExpression.LeftOperand;
+            Operation initialOperation = parsedExpression.Operation;
+            decimal initialRightOperand = parsedExpression.RightOperand;
 
             try
             {
                 input = NormalizeInput(input);
 
-                char[] operations = new char[] { '+', '-', '*' };
-
-                string lexem = "";
-
-                foreach (char ch in input)
+                int position = 0;
+                Token token = GetNextToken(input, ref position);
+                while (token != null)
                 {
-                    if (char.IsDigit(ch) || ch == '.')
-                        lexem += ch;
-                    else if (operations.Contains(ch))
-                    {
-                        if (state >= State.OperationParsed)
-                            throw new Exception(
-                                "В строке встречено несколько знаков операции"
-                            );
-
-                        if (state == State.Initial)
-                            leftOperand = ParseDecimal(lexem);
-
-                        operationSign = ch;
-
-                        lexem = "";
-                        state = State.OperationParsed;
-                    }
-                }
-
-                if (state == State.Initial && lexem != "")
-                {
-                    leftOperand = ParseDecimal(lexem);
-                    state = State.LeftOperandParsed;
-                }
-                else if (state == State.OperationParsed &&
-                         lexem != "")
-                {
-                    rightOperand = ParseDecimal(lexem);
-                    state = State.RightOperandParsed;
+                    ParseToken(token);
+                    token = GetNextToken(input, ref position);
                 }
 
                 return state == State.RightOperandParsed;
@@ -67,9 +38,9 @@ namespace OOP_Lab3
                 // Восстановить состояние парсера,
                 // которое было до вызова этого метода
                 state = initialState;
-                leftOperand = initialLeftOperand;
-                operationSign = initialOperation;
-                rightOperand = initialRightOperand;
+                parsedExpression.LeftOperand = initialLeftOperand;
+                parsedExpression.Operation = initialOperation;
+                parsedExpression.RightOperand = initialRightOperand;
 
                 // Пробросить исключение наверх
                 throw;
@@ -81,29 +52,12 @@ namespace OOP_Lab3
             if (state != State.RightOperandParsed)
                 throw new Exception("Парсер еще не готов выдать результат");
 
-            Operation operation;
-
-            switch (operationSign)
-            {
-                case '+':
-                    operation = Operation.Addition;
-                    break;
-
-                case '-':
-                    operation = Operation.Substraction;
-                    break;
-
-                case '*':
-                    operation = Operation.Multiplication;
-                    break;
-
-                default:
-                    throw new Exception("Неизвестная операция");
-            }
+            ParsedExpression result = parsedExpression;
 
             state = State.Initial;
+            parsedExpression = new ParsedExpression();
 
-            return new ParsedExpression(leftOperand, operation, rightOperand);
+            return result;
         }
 
         private enum State
@@ -115,10 +69,7 @@ namespace OOP_Lab3
         };
 
         private State state = State.Initial;
-
-        private decimal leftOperand = 0;
-        private char operationSign = '\0';
-        private decimal rightOperand = 0;
+        private ParsedExpression parsedExpression = new ParsedExpression();
 
         // Этот метод нужен для того, чтобы всегда парсить
         // decimal'ы с десятичной точкой, а не запятой,
@@ -132,12 +83,80 @@ namespace OOP_Lab3
             );
         }
 
+        private static Operation ParseOperationSign(string s)
+        {
+            switch (s)
+            {
+                case "+": return Operation.Addition;
+                case "-": return Operation.Substraction;
+                case "*": return Operation.Multiplication;
+                default: throw new Exception("Неизвестная операция");
+            }
+        }
+
         private string NormalizeInput(string input)
         {
             return input
                 .Replace(" ", "")
                 .Replace("=", "")
                 .Replace(',', '.');
+        }
+
+        private Token GetNextToken(string input, ref int position)
+        {
+            char[] operations = new char[] { '+', '-', '*' };
+
+            string lexem = "";
+            for (; position < input.Length; position++)
+            {
+                char ch = input[position];
+
+                if (char.IsDigit(ch) || ch == '.')
+                    lexem += ch;
+                else if (operations.Contains(ch))
+                {
+                    if (lexem != "")
+                        return new Token(lexem, TokenType.Number);
+                    else
+                    {
+                        position++;
+                        return new Token(ch.ToString(), TokenType.OperationSign);
+                    }
+                }
+            }
+
+            return lexem == "" ? null : new Token(lexem, TokenType.Number); ;
+        }
+
+        private void ParseToken(Token token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Number:
+                    if (state == State.Initial)
+                    {
+                        parsedExpression.LeftOperand = ParseDecimal(token.Content);
+                        state = State.LeftOperandParsed;
+                    }
+                    else if (state == State.OperationParsed)
+                    {
+                        parsedExpression.RightOperand = ParseDecimal(token.Content);
+                        state = State.RightOperandParsed;
+                    }
+                    break;
+
+                case TokenType.OperationSign:
+                    if (state >= State.OperationParsed)
+                        throw new Exception(
+                            "В строке встречено несколько знаков операции"
+                        );
+
+                    parsedExpression.Operation = ParseOperationSign(token.Content);
+                    state = State.OperationParsed;
+                    break;
+
+                default: throw new Exception("Неизвестный токен");
+            }
         }
     }
 }
