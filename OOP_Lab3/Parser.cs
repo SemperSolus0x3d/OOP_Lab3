@@ -5,6 +5,17 @@ namespace OOP_Lab3
 {
     public class Parser
     {
+        private enum State
+        {
+            Initial = 0,
+            LeftOperandParsed,
+            OperationParsed,
+            RightOperandParsed
+        };
+
+        private State state = State.Initial;
+        private ParsedExpression parsedExpression = new ParsedExpression();
+
         // Возвращает true, если парсер готов
         // выдать распарсенное выражение
         public bool ProcessInput(string input)
@@ -58,40 +69,6 @@ namespace OOP_Lab3
             parsedExpression = new ParsedExpression();
 
             return result;
-        }
-
-        private enum State
-        {
-            Initial = 0,
-            LeftOperandParsed,
-            OperationParsed,
-            RightOperandParsed
-        };
-
-        private State state = State.Initial;
-        private ParsedExpression parsedExpression = new ParsedExpression();
-
-        // Этот метод нужен для того, чтобы всегда парсить
-        // decimal'ы с десятичной точкой, а не запятой,
-        // независимо от языка системы и других параметров
-        private static decimal ParseDecimal(string s)
-        {
-            return decimal.Parse(
-                s,
-                System.Globalization.NumberStyles.Number,
-                System.Globalization.CultureInfo.InvariantCulture
-            );
-        }
-
-        private static Operation ParseOperationSign(string s)
-        {
-            switch (s)
-            {
-                case "+": return Operation.Addition;
-                case "-": return Operation.Substraction;
-                case "*": return Operation.Multiplication;
-                default: throw new Exception("Неизвестная операция");
-            }
         }
 
         private string NormalizeInput(string input)
@@ -156,6 +133,29 @@ namespace OOP_Lab3
                     break;
 
                 default: throw new Exception("Неизвестный токен");
+            }
+        }
+
+        // Этот метод нужен для того, чтобы всегда парсить
+        // decimal'ы с десятичной точкой, а не запятой,
+        // независимо от языка системы и других параметров
+        private static decimal ParseDecimal(string s)
+        {
+            return decimal.Parse(
+                s,
+                System.Globalization.NumberStyles.Number,
+                System.Globalization.CultureInfo.InvariantCulture
+            );
+        }
+
+        private static Operation ParseOperationSign(string s)
+        {
+            switch (s)
+            {
+                case "+": return Operation.Addition;
+                case "-": return Operation.Substraction;
+                case "*": return Operation.Multiplication;
+                default: throw new Exception("Неизвестная операция");
             }
         }
     }
