@@ -12,7 +12,10 @@ namespace OOP_Lab3
 
             PrintGuide();
 
-            decimal result = ParseAndEvaluateInput(new Parser());
+            ParsedExpression expression = ParseInput(new Parser());
+            Calculator calc = new Calculator();
+            decimal result = calc.EvaluateExpression(expression);
+
             Console.WriteLine($"Ответ: {result}");
             Pause();
         }
@@ -63,19 +66,19 @@ namespace OOP_Lab3
             Console.WriteLine();
         }
 
-        static decimal ParseAndEvaluateInput(Parser parser)
+        static ParsedExpression ParseInput(Parser parser)
         {
             try
             {
                 if (parser.ProcessInput(Console.ReadLine()))
-                    return new Calculator().EvaluateExpression(parser.GetResult());
+                    return parser.GetResult();
                 else
-                    return ParseAndEvaluateInput(parser);
+                    return ParseInput(parser);
             }
             catch(Exception ex)
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
-                return ParseAndEvaluateInput(parser);
+                return ParseInput(parser);
             }
         }
     }
