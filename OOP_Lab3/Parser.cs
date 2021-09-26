@@ -110,6 +110,9 @@ namespace OOP_Lab3
             switch (token.Type)
             {
                 case TokenType.Number:
+                    if (state == State.LeftOperandParsed)
+                        throw new Exception("Пропущен знак операции");
+
                     if (state == State.Initial)
                     {
                         parsedExpression.LeftOperand = ParseDecimal(token.Content);
