@@ -133,7 +133,7 @@ namespace OOP_Lab3
 
                     if (state >= State.OperationParsed)
                         throw new Exception(
-                            "В строке встречено несколько знаков операции"
+                            "Встречено несколько знаков операции"
                         );
 
                     parsedExpression.Operation = ParseOperationSign(token.Content);
