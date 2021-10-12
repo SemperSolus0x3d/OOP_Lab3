@@ -72,14 +72,13 @@ namespace OOP_Lab3
             {
                 if (parser.ProcessInput(Console.ReadLine()))
                     return parser.GetResult();
-                else
-                    return ParseInput(parser);
             }
             catch(Exception ex)
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
-                return ParseInput(parser);
             }
+
+            return ParseInput(parser);
         }
     }
 }
