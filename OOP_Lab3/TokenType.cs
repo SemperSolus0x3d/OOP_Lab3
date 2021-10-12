@@ -3,6 +3,14 @@
     enum TokenType
     {
         Number,
+
+        // Plus и Minus пришлось отделить
+        // от OperationSign для
+        // обработки отрицательных
+        // операндов
+        Plus,
+        Minus,
+
         OperationSign
     }
 }

@@ -16,7 +16,9 @@ namespace OOP_Lab3
         private State state = State.Initial;
         private ParsedExpression parsedExpression = new ParsedExpression();
 
-        private char[] operationSigns = new char[] { '+', '-', '*' };
+        private char[] operationSigns = new char[] { '*' };
+
+        private decimal operandSign = 1m;
 
         // Возвращает true, если парсер готов
         // выдать распарсенное выражение
@@ -31,6 +33,7 @@ namespace OOP_Lab3
             decimal initialLeftOperand = parsedExpression.LeftOperand;
             Operation initialOperation = parsedExpression.Operation;
             decimal initialRightOperand = parsedExpression.RightOperand;
+            decimal initialOperandSign = operandSign;
 
             try
             {
@@ -54,6 +57,7 @@ namespace OOP_Lab3
                 parsedExpression.LeftOperand = initialLeftOperand;
                 parsedExpression.Operation = initialOperation;
                 parsedExpression.RightOperand = initialRightOperand;
+                operandSign = initialOperandSign;
 
                 // Пробросить исключение наверх
                 throw;
@@ -90,6 +94,26 @@ namespace OOP_Lab3
 
                 if (char.IsDigit(ch) || ch == '.')
                     lexem += ch;
+                else if (ch == '+')
+                {
+                    if (lexem == "")
+                    {
+                        position++;
+                        return new Token("+", TokenType.Plus);
+                    }
+                    else
+                        return new Token(lexem, TokenType.Number);
+                }
+                else if (ch == '-')
+                {
+                    if (lexem == "")
+                    {
+                        position++;
+                        return new Token("-", TokenType.Minus);
+                    }
+                    else
+                        return new Token(lexem, TokenType.Number);
+                }
                 else if (operationSigns.Contains(ch))
                 {
                     if (lexem != "")
@@ -115,14 +139,48 @@ namespace OOP_Lab3
 
                     if (state == State.Initial)
                     {
-                        parsedExpression.LeftOperand = ParseDecimal(token.Content);
+                        parsedExpression.LeftOperand =
+                            ParseDecimal(token.Content) * operandSign;
                         state = State.LeftOperandParsed;
+
+                        operandSign = 1m;
                     }
                     else if (state == State.OperationParsed)
                     {
-                        parsedExpression.RightOperand = ParseDecimal(token.Content);
+                        parsedExpression.RightOperand =
+                            ParseDecimal(token.Content) * operandSign;
                         state = State.RightOperandParsed;
+
+                        operandSign = 1m;
                     }
+                    break;
+
+                case TokenType.Plus:
+                    if (state == State.Initial ||
+                        state == State.OperationParsed)
+                        operandSign = 1m;
+                    else if (state == State.LeftOperandParsed)
+                    {
+                        parsedExpression.Operation = Operation.Addition;
+                        state = State.OperationParsed;
+                    }
+                    else
+                        throw new Exception(@"Встречено '+' в неожиданном месте");
+
+                    break;
+
+                case TokenType.Minus:
+                    if (state == State.Initial ||
+                        state == State.OperationParsed)
+                        operandSign = -1m;
+                    else if (state == State.LeftOperandParsed)
+                    {
+                        parsedExpression.Operation = Operation.Substraction;
+                        state = State.OperationParsed;
+                    }
+                    else
+                        throw new Exception(@"Встречено - в неожиданном месте");
+
                     break;
 
                 case TokenType.OperationSign:
@@ -160,8 +218,6 @@ namespace OOP_Lab3
         {
             switch (s)
             {
-                case "+": return Operation.Addition;
-                case "-": return Operation.Substraction;
                 case "*": return Operation.Multiplication;
                 default: throw new Exception("Неизвестная операция");
             }
